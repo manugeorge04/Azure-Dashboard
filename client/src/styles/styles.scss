@@ -1,8 +1,10 @@
 @import './base/settings';
 @import './base/base';
 
-.root {
- margin:600px 600px 600px 600px;   
- font-size: $l-size; 
- color: red;
+
+.report-form{
+    display: flexbox;
+    max-width: 700px;
+    max-height: 900px; 
+    color: red;    
 }
