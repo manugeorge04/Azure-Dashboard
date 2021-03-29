@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {Button, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, makeStyles, MenuItem, Select, Switch, TextField} from '@material-ui/core'
-import {compareDesc, sub} from 'date-fns'
+import {compareDesc, sub, differenceInCalendarDays} from 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
 import ErrorAlert from "./ErrorAlert"
@@ -66,8 +66,12 @@ const GenerateReport = () => {
 
   const [alert, setAlert] = useState({
     status: false,
-    message:""
-  })  
+    message:"",
+    severity:"",
+    title:""
+  }) 
+  
+  
 
   const [customerIdEmpty, setCustomerIdStatus] = useState(false)
   const [subscriptionIdEmpty, setSubscriptionIdStatus] = useState(false)
@@ -83,37 +87,48 @@ const GenerateReport = () => {
   }
 
   const handleSubmit = () => {   
-    console.log("Before")
-    console.log(customerId, customerIdEmpty)
-    console.log(subscriptionId, subscriptionIdEmpty)
-
+    console.log(typeof(differenceInCalendarDays(endDate, startDate)))
+    let diff = (differenceInCalendarDays(endDate, startDate) )
+    console.log(diff)
+    //console.log((differenceInCalendarDays(startDate, endDate) > 31))
+    console.log(diff>31)
+    console.log(compareDesc(startDate, endDate) !== 1)
     //check start date < end date        
     if (compareDesc(startDate, endDate) !== 1){      
       setAlert({
         status:true,
-        message: "Please make sure start date is atleast 1 day before the end date"
+        message: "Please make sure start date is atleast 1 day before the end date",
+        severity: "error",
+        title:"Error"
       })
     }
-    //check latest date is today and not future
 
-    // check ID inputs
-    
-    else if (customerId === ""){
+    // check ID inputs    
+    if (customerId === ""){
       setCustomerIdStatus(true)
+    }else
+      setCustomerIdStatus(false)
+    if (subscriptionId === ""){
+      setSubscriptionIdStatus(true)      
+    }else 
+      setSubscriptionIdStatus(false)
+
+    //Warn if difference is more than 30 days    
+    if (differenceInCalendarDays(endDate, startDate) > 31){
+      console.log("IN")
+      setAlert({
+        status:true,
+        message: "The requested data is for more than 30 days, report generation might take a while. Please wait.",
+        severity: "info",
+        title:"Please Note"
+      })
     }
-    else if (subscriptionId === ""){
-      setSubscriptionIdStatus(true)
-    }
-    console.log("After")
-    console.log(customerId, customerIdEmpty)
-    console.log(subscriptionId, subscriptionIdEmpty)
   }
 
 
   return(          
-    <div className={classes.root}>
-      
-      {alert.status? <ErrorAlert errorMessage={alert.message} handleClose={setAlert} /> : undefined}
+    <div className={classes.root}>    
+      {alert.status? <ErrorAlert errorMessage={alert.message} title={alert.title} severity={alert.severity} handleClose={setAlert} /> : undefined}
       <h1> Generate Customer Utilization Report</h1>    
       <Grid container spacing={3} >
         <Grid item xs={12} sm={6}>
@@ -149,6 +164,7 @@ const GenerateReport = () => {
             margin="none"                      
             label="Enter Start Date"
             format="MM/dd/yyyy"
+            disableFuture="true"
             value={startDate}
             onChange={handleStartDateChange}
             inputVariant="outlined"
@@ -165,6 +181,7 @@ const GenerateReport = () => {
             margin="none"          
             label="Enter End Date"
             format="MM/dd/yyyy"
+            disableFuture="true"
             value={endDate}
             onChange={handleEndDateChange}
             inputVariant="outlined"

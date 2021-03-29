@@ -14,16 +14,15 @@ const ErrorAlert = (props) => {
   return(
       <div >
         <Alert 
-        severity="error"
+        severity={props.severity}
         onClose={() => {
             props.handleClose({
-                status:false,
-                message: ""
+                status:false                
               })
         }}
         className = {classes.resize}
         >
-        <AlertTitle className = {classes.resize}>Error</AlertTitle>
+        <AlertTitle className = {classes.resize}>{props.title}</AlertTitle>
             {props.errorMessage}
         </Alert>
       </div>
