@@ -86,14 +86,10 @@ const GenerateReport = () => {
     setSubscriptionId(event.target.value)
   }
 
-  const handleSubmit = () => {   
-    console.log(typeof(differenceInCalendarDays(endDate, startDate)))
-    let diff = (differenceInCalendarDays(endDate, startDate) )
-    console.log(diff)
-    //console.log((differenceInCalendarDays(startDate, endDate) > 31))
-    console.log(diff>31)
-    console.log(compareDesc(startDate, endDate) !== 1)
-    //check start date < end date        
+  const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b/);
+  
+  const handleSubmit = () => {       
+    //check start date < end date 
     if (compareDesc(startDate, endDate) !== 1){      
       setAlert({
         status:true,
@@ -103,12 +99,12 @@ const GenerateReport = () => {
       })
     }
 
-    // check ID inputs    
-    if (customerId === ""){
+    // check ID inputs  
+    if (customerId === "" || !(patt.test(customerId))){
       setCustomerIdStatus(true)
     }else
       setCustomerIdStatus(false)
-    if (subscriptionId === ""){
+    if (subscriptionId === "" || !(patt.test(subscriptionId))){
       setSubscriptionIdStatus(true)      
     }else 
       setSubscriptionIdStatus(false)
@@ -123,6 +119,8 @@ const GenerateReport = () => {
         title:"Please Note"
       })
     }
+
+    //get request to partner center
   }
 
 
