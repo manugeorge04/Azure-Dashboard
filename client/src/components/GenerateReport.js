@@ -86,9 +86,12 @@ const GenerateReport = () => {
     setSubscriptionId(event.target.value)
   }
 
-  const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b/);
-  
-  const handleSubmit = () => {       
+  const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b$/);
+  let allValidationPass = false
+
+  const handleSubmit = () => { 
+    allValidationPass = true //if this stays true at the end of all the if statements then the PC api will be called
+    
     //check start date < end date 
     if (compareDesc(startDate, endDate) !== 1){      
       setAlert({
@@ -97,30 +100,35 @@ const GenerateReport = () => {
         severity: "error",
         title:"Error"
       })
+      allValidationPass = false
     }
 
     // check ID inputs  
-    if (customerId === "" || !(patt.test(customerId))){
+    if (customerId === "" || !(patt.test(customerId.trim()))){
       setCustomerIdStatus(true)
+      allValidationPass = false
     }else
       setCustomerIdStatus(false)
-    if (subscriptionId === "" || !(patt.test(subscriptionId))){
-      setSubscriptionIdStatus(true)      
+    if (subscriptionId === "" || !(patt.test(subscriptionId.trim()))){
+      setSubscriptionIdStatus(true)  
+      allValidationPass = false    
     }else 
       setSubscriptionIdStatus(false)
 
     //Warn if difference is more than 30 days    
-    if (differenceInCalendarDays(endDate, startDate) > 31){
-      console.log("IN")
+    if (differenceInCalendarDays(endDate, startDate) > 31){      
       setAlert({
         status:true,
         message: "The requested data is for more than 30 days, report generation might take a while. Please wait.",
         severity: "info",
         title:"Please Note"
-      })
+      })      
     }
 
-    //get request to partner center
+    //Send a Get request to partner center  
+    if (allValidationPass){
+      //get request to partner center
+    }
   }
 
 
