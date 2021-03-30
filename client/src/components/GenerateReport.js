@@ -55,7 +55,7 @@ const GenerateReport = () => {
     setEndDate(date);
   };
 
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(false);
   const handleChange = () => {
     setStatus((prev) => !prev);
   };
@@ -123,10 +123,31 @@ const GenerateReport = () => {
         title:"Please Note"
       })      
     }    
-
-    //Send a Get request to partner center  
+ 
+    const submit = async() => {    
+      const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)              
+      if (response.data){
+        console.log(response.data.data.items)
+        setAlert({
+          status:true,
+          message: "The report has be been generated and can be downloaded as .csv file",
+          severity: "success",
+          title:"Report Generated"
+        }) 
+      }
+      if (response.error){
+        console.log(response.error)
+        setAlert({
+          status:true,
+          message: response.error.description,
+          severity: "error",
+          title:"Error"
+        }) 
+      }      
+    }
+    //Submit form details all validations have passed
     if (allValidationPass){
-      getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)        
+      submit()
     }
   }
 

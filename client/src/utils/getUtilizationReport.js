@@ -19,13 +19,15 @@ let error = {}
     const response = await axios.get(URL, {
       headers: {
         'Authorization': `Bearer ${token}`
-      }
-    });    
+      }      
+    });
+    return ({data:response})
   } catch (e) {        
     const err_data = e.response.data
     if (err_data.code === 3000){
       error = {description:err_data.description+". Please check the ID"}
-    }    
+    }
+    return ({error})    
   }  
 }
 
