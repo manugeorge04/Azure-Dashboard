@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import {Button, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, makeStyles, MenuItem, Select, Switch, TextField} from '@material-ui/core'
-import {compareDesc, sub, differenceInCalendarDays} from 'date-fns'
+import {compareDesc, sub, differenceInCalendarDays, format} from 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
+import GetAppIcon from '@material-ui/icons/GetApp';
 import ErrorAlert from "./ErrorAlert"
 import getUtilizationReport from "./../utils/getUtilizationReport"
+import download from 'downloadjs'
+import getCSV from '../utils/getCSV'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,12 +88,19 @@ const GenerateReport = () => {
     setSubscriptionId(event.target.value.trim())
   }
 
+  const [downloadStatus, setDownloadStatus] = useState(false) 
+
   const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b$/);
   let allValidationPass = false
 
+  const [report, setReport] = useState({}) 
+  const handleDownload = () => {    
+    const reportCSV = getCSV(report, status)    
+    download(reportCSV, `UtilizationReport${format(startDate,"'_'dd-MM")}${format(endDate,"'_'dd-MM")}.csv`, "text/csv");
+  }
+
   const handleSubmit = () => { 
-    allValidationPass = true //if this stays true at the end of all the if statements then the PC api will be called
-    
+    allValidationPass = true //if this stays true at the end of all the if statements then the PC api will be called    
     //check start date < end date 
     if (compareDesc(startDate, endDate) !== 1){      
       setAlert({
@@ -122,18 +132,20 @@ const GenerateReport = () => {
         severity: "info",
         title:"Please Note"
       })      
-    }    
- 
+    }  
+     
     const submit = async() => {    
+      setDownloadStatus(false)
       const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)              
-      if (response.data){
-        console.log(response.data.data.items)
+      if (response.data){        
+        setReport(response.data.data.items)        
         setAlert({
           status:true,
           message: "The report has be been generated and can be downloaded as .csv file",
           severity: "success",
           title:"Report Generated"
         }) 
+        setDownloadStatus(true)
       }
       if (response.error){
         console.log(response.error)
@@ -256,12 +268,21 @@ const GenerateReport = () => {
           </FormGroup>             
         </Grid>                
       </Grid> 
-
+      
       <Button variant="contained" color="primary" className={classes.submitButton}
       onClick={handleSubmit}     
       >
         Submit
-      </Button>      
+      </Button>  
+
+      { downloadStatus? 
+      <Button variant="contained" color="primary" className={classes.submitButton} startIcon={<GetAppIcon />}
+      onClick={handleDownload}
+      >
+        Download
+      </Button> : undefined
+      }
+      
     </div>
   )
 }
