@@ -4,6 +4,7 @@ import {compareDesc, sub, differenceInCalendarDays} from 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
 import ErrorAlert from "./ErrorAlert"
+import getUtilizationReport from "./../utils/getUtilizationReport"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,9 +70,7 @@ const GenerateReport = () => {
     message:"",
     severity:"",
     title:""
-  }) 
-  
-  
+  })   
 
   const [customerIdEmpty, setCustomerIdStatus] = useState(false)
   const [subscriptionIdEmpty, setSubscriptionIdStatus] = useState(false)
@@ -80,10 +79,10 @@ const GenerateReport = () => {
   const [subscriptionId, setSubscriptionId] = useState("")
 
   const handleCustomerIdInput = (event) => {
-    setCustomerId(event.target.value)
+    setCustomerId(event.target.value.trim())
   }
   const handleSubscriptionIdInput = (event) => {
-    setSubscriptionId(event.target.value)
+    setSubscriptionId(event.target.value.trim())
   }
 
   const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b$/);
@@ -104,12 +103,12 @@ const GenerateReport = () => {
     }
 
     // check ID inputs  
-    if (customerId === "" || !(patt.test(customerId.trim()))){
+    if (customerId === "" || !(patt.test(customerId))){
       setCustomerIdStatus(true)
       allValidationPass = false
     }else
       setCustomerIdStatus(false)
-    if (subscriptionId === "" || !(patt.test(subscriptionId.trim()))){
+    if (subscriptionId === "" || !(patt.test(subscriptionId))){
       setSubscriptionIdStatus(true)  
       allValidationPass = false    
     }else 
@@ -123,11 +122,11 @@ const GenerateReport = () => {
         severity: "info",
         title:"Please Note"
       })      
-    }
+    }    
 
     //Send a Get request to partner center  
     if (allValidationPass){
-      //get request to partner center
+      getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)        
     }
   }
 
@@ -169,7 +168,7 @@ const GenerateReport = () => {
             className={classes.datePicker}
             margin="none"                      
             label="Enter Start Date"
-            format="MM/dd/yyyy"
+            format="dd/MM/yyyy"
             disableFuture="true"
             value={startDate}
             onChange={handleStartDateChange}
@@ -186,7 +185,7 @@ const GenerateReport = () => {
             className={classes.datePicker}     
             margin="none"          
             label="Enter End Date"
-            format="MM/dd/yyyy"
+            format="dd/MM/yyyy"
             disableFuture="true"
             value={endDate}
             onChange={handleEndDateChange}
