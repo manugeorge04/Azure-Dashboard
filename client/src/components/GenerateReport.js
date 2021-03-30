@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Button, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, makeStyles, MenuItem, Select, Switch, TextField} from '@material-ui/core'
+import {Button,CircularProgress, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, makeStyles, MenuItem, Select, Switch, TextField} from '@material-ui/core'
 import {compareDesc, sub, differenceInCalendarDays, format} from 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
@@ -87,7 +87,8 @@ const GenerateReport = () => {
   const handleSubscriptionIdInput = (event) => {
     setSubscriptionId(event.target.value.trim())
   }
-
+  
+  const [loadingStatus, setLoadingStatus] = useState(false)
   const [downloadStatus, setDownloadStatus] = useState(false) 
 
   const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b$/);
@@ -134,8 +135,7 @@ const GenerateReport = () => {
       })      
     }  
      
-    const submit = async() => {    
-      setDownloadStatus(false)
+    const submit = async() => {             
       const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)              
       if (response.data){        
         setReport(response.data.data.items)        
@@ -155,11 +155,15 @@ const GenerateReport = () => {
           severity: "error",
           title:"Error"
         }) 
-      }      
+      }   
+      setLoadingStatus(false)   //stop loading screen here
     }
     //Submit form details all validations have passed
     if (allValidationPass){
-      submit()
+      setAlert({status:false})
+      setDownloadStatus(false)
+      setLoadingStatus(true) //begin loading screen here
+      submit()      
     }
   }
 
@@ -269,11 +273,13 @@ const GenerateReport = () => {
         </Grid>                
       </Grid> 
       
-      <Button variant="contained" color="primary" className={classes.submitButton}
+      <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
       onClick={handleSubmit}     
       >
         Submit
       </Button>  
+
+      {loadingStatus? <CircularProgress />: undefined}
 
       { downloadStatus? 
       <Button variant="contained" color="primary" className={classes.submitButton} startIcon={<GetAppIcon />}
