@@ -24,7 +24,7 @@ const getCSV = (report, showDetails) => {
         label: 'Usage Start Time',
         value: 'usageStartTime'
       },{
-        label: 'Usage End TIme',
+        label: 'Usage End Time',
         value: 'usageEndTime'
       }];
 

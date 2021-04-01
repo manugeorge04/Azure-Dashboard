@@ -14,21 +14,35 @@ const getUtilizationReport = async(customerId,subscriptionId,endDate,startDate,s
 const response = await axios.get('/api/getAccessToken')
 const token = response.data
 let error = {}
+let data = []
 
   try {
-    const response = await axios.get(URL, {
+    let response = await axios.get(URL, {
       headers: {
         'Authorization': `Bearer ${token}`
       }      
     });
-    return ({data:response})
-  } catch (e) {        
+    data = data.concat(response.data.items)            
+    while (response.data.links.next){
+      response = await axios.get(`https://api.partnercenter.microsoft.com/v1/${response.data.links.next.uri}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'MS-ContinuationToken': response.data.links.next.headers[0].value
+        }      
+      });  
+      data = data.concat(response.data.items)
+    }    
+    return ({data})
+  } catch (e) { 
+    console.error(e)
+    if  (e.response){
     const err_data = e.response.data
     if (err_data.code === 3000){
       error = {description:err_data.description+". Please check the ID"}
-    }
-    return ({error})    
+    }    
+    return ({error})        
   }  
+}
 }
 
 export default getUtilizationReport

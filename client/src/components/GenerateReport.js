@@ -97,7 +97,7 @@ const GenerateReport = () => {
   const [report, setReport] = useState({}) 
   const handleDownload = () => {    
     const reportCSV = getCSV(report, status)    
-    download(reportCSV, `UtilizationReport${format(startDate,"'_'dd-MM")}${format(endDate,"'_'dd-MM")}.csv`, "text/csv");
+    download(reportCSV, `UtilizationReport ${granularity}${format(startDate,"'_'dd-MM")}${format(endDate,"'_'dd-MM")}.csv`, "text/csv");
   }
 
   const handleSubmit = () => { 
@@ -138,7 +138,7 @@ const GenerateReport = () => {
     const submit = async() => {             
       const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)              
       if (response.data){        
-        setReport(response.data.data.items)        
+        setReport(response.data)                
         setAlert({
           status:true,
           message: "The report has be been generated and can be downloaded as .csv file",
@@ -148,7 +148,6 @@ const GenerateReport = () => {
         setDownloadStatus(true)
       }
       if (response.error){
-        console.log(response.error)
         setAlert({
           status:true,
           message: response.error.description,
