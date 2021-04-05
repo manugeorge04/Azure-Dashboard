@@ -15,7 +15,7 @@ const getUtilizationReport = async(customerId,subscriptionId,endDate,startDate,s
   
 let accessToken = Cookies.getJSON('accessToken')
 console.log(accessToken)
-if (!accessToken || accessToken.tokenExpiry > (Date.now() - 60 ))
+if (!accessToken || accessToken.tokenExpiry > ((Date.now()/1000) - 60 ))
 {
   console.log("getting access token")
   const response = await axios.get('/api/getAccessToken')
