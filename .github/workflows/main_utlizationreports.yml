@@ -52,5 +52,5 @@ jobs:
       with:
         app-name: 'utlizationreports'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_23511b0378584182ab82b23a4113570d }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_0b2c34bd9c494766ac049859ac8695e1 }}
         package: .
