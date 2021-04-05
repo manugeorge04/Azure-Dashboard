@@ -1,5 +1,7 @@
 import {format} from 'date-fns'
 import axios from 'axios'
+import Cookies from 'js-cookie'
+
 
 const getUtilizationReport = async(customerId,subscriptionId,endDate,startDate,showDetails,granularity) => {
   let showDetailsStatus = "True"
@@ -11,22 +13,33 @@ const getUtilizationReport = async(customerId,subscriptionId,endDate,startDate,s
     `https://api.partnercenter.microsoft.com/v1/customers/${customerId}/subscriptions/${subscriptionId}/utilizations/azure?start_time=${format(startDate,"yyyy-MM-dd'T00:00:00-00:00'")}&end_time=${format(endDate,"yyyy-MM-dd'T00:00:00-00:00'")}&granularity=${granularity}&show_details=${showDetailsStatus}`              
   ) 
   
-const response = await axios.get('/api/getAccessToken')
-const token = response.data
+let accessToken = Cookies.getJSON('accessToken')
+console.log(accessToken)
+if (!accessToken || accessToken.expires_on > (Date.now() - 60 ))
+{
+  console.log("getting access token")
+  const response = await axios.get('/api/getAccessToken')
+  accessToken = { 
+    tokenValue : response.data.access_token,
+    tokenExpiry: response.data.expires_on
+  }
+  Cookies.set('accessToken', accessToken, {expires : 30 });
+}
+
 let error = {}
 let data = []
 
   try {
     let response = await axios.get(URL, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${accessToken.tokenValue}`
       }      
     });
     data = data.concat(response.data.items)            
     while (response.data.links.next){
       response = await axios.get(`https://api.partnercenter.microsoft.com/v1/${response.data.links.next.uri}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken.tokenValue}`,
           'MS-ContinuationToken': response.data.links.next.headers[0].value
         }      
       });  

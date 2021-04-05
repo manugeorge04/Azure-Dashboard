@@ -26,7 +26,7 @@ router.get('/api/getAccessToken', async (req, res) => {
             }
           }
         )        
-        res.send(response.data.access_token)               
+        res.send(response.data)               
     }catch (error) {
         console.error(error);
     }  
