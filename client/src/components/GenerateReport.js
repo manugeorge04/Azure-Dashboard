@@ -180,6 +180,7 @@ const GenerateReport = () => {
           helperText={customerIdEmpty?"Please enter a valid Customer ID":""}     
           label="Enter Customer ID"           
           variant="outlined"
+          disabled={loadingStatus}
           onChange={handleCustomerIdInput}
           InputProps={{ classes: { root: classes.resize } }}
           InputLabelProps={{classes: { root: classes.resize } }}
@@ -193,6 +194,7 @@ const GenerateReport = () => {
           label="Enter Subcription ID" 
           helperText={subscriptionIdEmpty?"Please enter a valid Subcription ID":""}
           variant="outlined"
+          disabled={loadingStatus}
           onChange={handleSubscriptionIdInput}
           InputProps={{ classes: { root: classes.resize } }}
           InputLabelProps={{classes: { root: classes.resize } }}
@@ -206,6 +208,7 @@ const GenerateReport = () => {
             label="Enter Start Date"
             format="dd/MM/yyyy"
             disableFuture="true"
+            disabled={loadingStatus}
             value={startDate}
             onChange={handleStartDateChange}
             inputVariant="outlined"
@@ -223,6 +226,7 @@ const GenerateReport = () => {
             label="Enter End Date"
             format="dd/MM/yyyy"
             disableFuture="true"
+            disabled={loadingStatus}
             value={endDate}
             onChange={handleEndDateChange}
             inputVariant="outlined"
@@ -243,6 +247,7 @@ const GenerateReport = () => {
               onChange={handleGranularityChange}
               label="Granularity"
               className={classes.resize}
+              disabled={loadingStatus}
             >                            
               <MenuItem value="daily" className={classes.resize}>Daily</MenuItem>
               <MenuItem value="hourly" className={classes.resize}>Hourly</MenuItem>           
@@ -263,6 +268,7 @@ const GenerateReport = () => {
                 onChange={handleChange}
                 color="primary"          
                 inputProps={{ 'aria-label': 'primary checkbox' }}
+                disabled={loadingStatus}
               />
             }
             label="Show Details"
