@@ -10,8 +10,11 @@ import download from 'downloadjs'
 import getCSV from '../utils/getCSV'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  root1 : {
     margin: theme.spacing(2),    
+  },
+  root: {
+    margin: theme.spacing(1),    
     flexGrow: 1,
     maxWidth: '900px',
     paddingRight: '12px'
@@ -167,9 +170,10 @@ const GenerateReport = () => {
   }
 
 
-  return(          
-    <div className={classes.root}>    
-      {alert.status? <ErrorAlert errorMessage={alert.message} title={alert.title} severity={alert.severity} handleClose={setAlert} /> : undefined}
+  return(  
+    <div className = {classes.root1}>
+    {alert.status && <ErrorAlert errorMessage={alert.message} title={alert.title} severity={alert.severity} handleClose={setAlert} />} 
+    <div className={classes.root}>        
       <h1> Generate Customer Utilization Report</h1>    
       <Grid container spacing={3} >
         <Grid item xs={12} sm={6}>
@@ -284,17 +288,18 @@ const GenerateReport = () => {
         Submit
       </Button>  
 
-      {loadingStatus? <CircularProgress />: undefined}
+      {loadingStatus && <CircularProgress className = "circularProgress" />}
 
-      { downloadStatus? 
+      { downloadStatus && 
       <Button variant="contained" color="primary" className={classes.submitButton} startIcon={<GetAppIcon />}
       onClick={handleDownload}
       >
         Download
-      </Button> : undefined
+      </Button> 
       }
       
     </div>
+    </div>        
   )
 }
 export default GenerateReport
