@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     margin: theme.spacing(2), 
-    width: '38ch', 
+    width: '41ch', 
   },
   resize:{
     fontSize:'1.5rem'
@@ -61,7 +61,7 @@ const GenerateReport = () => {
     setEndDate(date);
   };
 
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(true);
   const handleChange = () => {
     setStatus((prev) => !prev);
   };
