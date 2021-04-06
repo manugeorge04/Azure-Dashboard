@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     margin: theme.spacing(2), 
-    width: '49ch', 
+    width: '38ch', 
   },
   resize:{
     fontSize:'1.5rem'
