@@ -137,9 +137,9 @@ const GenerateReport = () => {
       if (differenceInCalendarDays(endDate, startDate) > 31){       
         setAlert({
           status:true,
-          message: "The requested data is for more than 30 days, report generation might take a while. Please wait.",
+          message: "The requested data is for more than 30 days, report generation might take a while",
           severity: "info",
-          title:"Please Note"
+          title:"Please Wait"
         })                  
       }  
       
