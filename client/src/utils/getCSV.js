@@ -13,7 +13,7 @@ const getCSV = (report, showDetails) => {
         //value: 'resource.name'
       },{
         label: 'Category',
-        value: (row, field) => { return (row.resource.subcategory || 'N/A')}
+        value: (row, field) => { return (row.resource.category || 'N/A')}
         //value: 'resource.category'
       },{
         label: 'Sub-Category',
@@ -71,8 +71,8 @@ const getCSV = (report, showDetails) => {
     const getAdditionalFields = (item) => ({            
         ...item,
         'ResourceGroup':item.instanceData.resourceUri.split("/")[4],
-        'ResourceName': item.instanceData.resourceUri.split("/")[7],
-        'ResourceType': item.instanceData.resourceUri.split("/")[6],
+        'ResourceName': item.instanceData.resourceUri.split("/")[8],
+        'ResourceType': item.instanceData.resourceUri.split("/")[7],
         'usageEndTime': format(new Date(item.usageEndTime.slice(0,10)), 'dd-MMM-yyyy'),
         'usageStartTime': format(new Date(item.usageStartTime.slice(0,10)), 'dd-MMM-yyyy')
     })
