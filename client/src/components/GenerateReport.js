@@ -99,7 +99,9 @@ const GenerateReport = () => {
   let allValidationPass = false
 
   const [report, setReport] = useState({}) 
-  const handleDownload = () => {    
+  const [clicked, setDownloadClick] = useState(false)
+  const handleDownload = () => {
+    setDownloadClick(true)    
     const reportCSV = getCSV(report, status)    
     download(reportCSV, `${granularity.charAt(0).toUpperCase() + granularity.slice(1)}UtilizationReport ${format(startDate,"' 'dd-MMM")}${format(endDate,"' to 'dd-MMM")}.csv`, "text/csv");
   }
@@ -168,6 +170,7 @@ const GenerateReport = () => {
     }
     //Submit form details all validations have passed
     if (allValidationPass){
+      setDownloadClick(false)
       setAlert({status:false})
       setDownloadStatus(false)
       setLoadingStatus(true) //begin loading screen here
@@ -296,12 +299,15 @@ const GenerateReport = () => {
 
       {loadingStatus && <CircularProgress className = "circularProgress" />}
 
-      { downloadStatus && 
-      <Button variant="contained" color="primary" className={classes.submitButton} startIcon={<GetAppIcon />}
-      onClick={handleDownload}
-      >
+      { downloadStatus &&  <Button 
+        className={classes.submitButton}
+        variant="contained"  
+        startIcon={<GetAppIcon />}
+        color= {clicked ? "default" : "primary"}
+        onClick={handleDownload}
+        >
         Download
-      </Button> 
+        </Button> 
       }
       
     </div>
