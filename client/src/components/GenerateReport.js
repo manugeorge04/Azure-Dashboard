@@ -129,16 +129,19 @@ const GenerateReport = () => {
       setSubscriptionIdStatus(false)
 
     //Warn if difference is more than 30 days    
-    if (differenceInCalendarDays(endDate, startDate) > 31){      
-      setAlert({
-        status:true,
-        message: "The requested data is for more than 30 days, report generation might take a while. Please wait.",
-        severity: "info",
-        title:"Please Note"
-      })      
-    }  
      
-    const submit = async() => {             
+    const submit = async() => {     
+      
+      //Warn if difference is more than 30 days    
+      if (differenceInCalendarDays(endDate, startDate) > 31){       
+        setAlert({
+          status:true,
+          message: "The requested data is for more than 30 days, report generation might take a while. Please wait.",
+          severity: "info",
+          title:"Please Note"
+        })                  
+      }  
+      
       const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)              
       if (response.data){        
         setReport(response.data)                
