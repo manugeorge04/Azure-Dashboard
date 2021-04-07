@@ -6,6 +6,7 @@ import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ErrorAlert from "./ErrorAlert"
 import getUtilizationReport from "./../utils/getUtilizationReport"
+import getCompanyName from '../utils/getCompanyName'
 import download from 'downloadjs'
 import getCSV from '../utils/getCSV'
 
@@ -142,14 +143,16 @@ const GenerateReport = () => {
         })                  
       }  
       
-      const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity)              
+      const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity) 
+      const companyName = await getCompanyName(customerId) 
+      
       if (response.data){        
         setReport(response.data)                
         setAlert({
           status:true,
-          message: "The report has be been generated and can be downloaded as .csv file",
+          message: "The report can be downloaded as .csv file",
           severity: "success",
-          title:"Report Generated"
+          title:`Report Generated for ${companyName}`
         }) 
         setDownloadStatus(true)
       }
