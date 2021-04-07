@@ -100,7 +100,7 @@ const GenerateReport = () => {
   const [report, setReport] = useState({}) 
   const handleDownload = () => {    
     const reportCSV = getCSV(report, status)    
-    download(reportCSV, `UtilizationReport ${granularity}${format(startDate,"'_'dd-MM")}${format(endDate,"'_'dd-MM")}.csv`, "text/csv");
+    download(reportCSV, `${granularity.charAt(0).toUpperCase() + granularity.slice(1)}UtilizationReport ${format(startDate,"' 'dd-MMM")}${format(endDate,"' to 'dd-MMM")}.csv`, "text/csv");
   }
 
   const handleSubmit = () => { 
