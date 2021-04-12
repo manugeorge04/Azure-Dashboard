@@ -1,5 +1,5 @@
-import React from 'react';
-import {AppBar, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+import {AppBar, Drawer, Divider ,IconButton, List, ListItem, ListItemText, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
@@ -12,10 +12,51 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  list: {
+    width: "25rem",      
+  },
+  listItem: {
+    paddingTop: "1rem",
+    paddingBottom: "1rem",
+  },
+  resize:{
+    fontSize:'1.5rem'
+  },
 }));
 
 const AppBarHeader = () => {
   const classes = useStyles();
+
+  const [drawerStatus, setDrawerStatus] = useState(false)
+
+  const toggleDrawer = (status) => (event) => {
+      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+          return; //closes the drawer only if enter key is presssed after using the shift and tab      
+      } // if shift and tab are pressed it makes sure the drawer isn't closed
+      setDrawerStatus(status)
+  };
+
+  const DrawerList = () => (
+    <div
+      className={classes.list}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+      <Divider/>
+        <ListItem className={classes.listItem} button >          
+          <ListItemText primaryTypographyProps={{ classes: { root: classes.resize } }} primary="Generate Utilzation Report" />
+        </ListItem>
+      <Divider/>  
+        <ListItem className={classes.listItem}  button  >          
+          <ListItemText primaryTypographyProps={{ classes: { root: classes.resize } }} primary="My Resources" />
+        </ListItem>
+        <Divider/>
+      </List>      
+    </div>
+  );
+  
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -27,11 +68,15 @@ const AppBarHeader = () => {
            className={classes.menuButton}
            color="inherit"
            aria-label="menu"
+           onClick={toggleDrawer(true)}
           >
             <MenuIcon fontSize="large" />
           </IconButton>          
         </Toolbar>
       </AppBar>
+      <Drawer anchor="right" open={drawerStatus} onClose={toggleDrawer(false)}>
+        <DrawerList/>
+      </Drawer>
     </div>
   );
 }
