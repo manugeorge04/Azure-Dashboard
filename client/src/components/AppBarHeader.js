@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import {AppBar, Drawer, Divider ,IconButton, List, ListItem, ListItemText, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -45,11 +46,11 @@ const AppBarHeader = () => {
     >
       <List>
       <Divider/>
-        <ListItem className={classes.listItem} button >          
+        <ListItem className={classes.listItem} button component={Link} to="/generatereport">          
           <ListItemText primaryTypographyProps={{ classes: { root: classes.resize } }} primary="Generate Utilzation Report" />
         </ListItem>
       <Divider/>  
-        <ListItem className={classes.listItem}  button  >          
+        <ListItem className={classes.listItem}  button  component={Link} to="/myresources">          
           <ListItemText primaryTypographyProps={{ classes: { root: classes.resize } }} primary="My Resources" />
         </ListItem>
         <Divider/>
