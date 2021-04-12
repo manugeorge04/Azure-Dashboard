@@ -4,7 +4,8 @@ import Cookies from 'js-cookie'
 
 const getMyResources = async (customerId, subscriptionId) => {
 
-    const endDate = new Date()  
+    const todayDate = new Date()   
+    const endDate = sub( todayDate, { days: 1 })    
     const startDate = sub( endDate, { days: 3 })    
 
     let URL = encodeURI(
@@ -24,6 +25,11 @@ const getMyResources = async (customerId, subscriptionId) => {
 
     let error = {}
     let data = []
+    const listOfResources = {}
+    let RGName = ""
+    let RCategory = ""
+    let RName = ""
+
 
     try {
         let response = await axios.get(URL, {
@@ -44,7 +50,26 @@ const getMyResources = async (customerId, subscriptionId) => {
           data = data.concat(response.data.items)
         }
 
-        console.log(data)
+        data.forEach( (item) => {
+          RGName = item.instanceData.resourceUri.split("/")[4]
+          RCategory = item.resource.category
+          RName = item.instanceData.resourceUri.split("/")[8]
+
+          if (RGName in listOfResources){
+            if (RCategory in listOfResources[RGName]){
+              listOfResources[RGName][RCategory].add(RName)
+            }else{ //RCategory not in listOfResources so create one and add the name            
+              listOfResources[RGName][RCategory] = new Set()
+              listOfResources[RGName][RCategory].add(RName)
+            }
+          }else { //RGName not in listOfResources so create and then add the rest
+            listOfResources[RGName] = {}
+            listOfResources[RGName][RCategory] = new Set()
+            listOfResources[RGName][RCategory].add(RName)
+          }          
+        })
+
+        console.log(listOfResources)
         //return ({data})
     }catch (e) { 
         console.error(e)
