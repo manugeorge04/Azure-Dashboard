@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
-import {Button, Grid, makeStyles, TextField} from '@material-ui/core'
+import {Button, CircularProgress, Grid, makeStyles, TextField} from '@material-ui/core'
+import getMyResources from '../utils/getMyResources';
 
 const useStyles = makeStyles((theme) => ({ 
   root: {
@@ -67,14 +68,16 @@ const MyResources = () => {
 
     const submit = async() => {       
       console.log("get resources")
-      //const response = await getUtilizationReport(customerId,subscriptionId,endDate,startDate,status,granularity) 
+      const response = await getMyResources(customerId,subscriptionId) 
       //get resources ^
+      setLoadingStatus(false)    
     }
 
     //Submit form details all validations have passed
     if (allValidationPass){    
       setLoadingStatus(true)
-      submit()      
+      submit()  
+      
     }
     
   }
@@ -119,6 +122,8 @@ const MyResources = () => {
       >
         Submit
       </Button>  
+
+      {loadingStatus && <CircularProgress className = "circularProgress" />}
 
     </div>
   )
