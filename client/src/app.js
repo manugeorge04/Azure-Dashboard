@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom'
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 
-import GenerateReport from './components/GenerateReport';
+import AppRouter from './routers/router'
 
 ReactDOM.render(
   
-    <GenerateReport />
+    <AppRouter/>
   ,
   document.getElementById('app'),
 )
