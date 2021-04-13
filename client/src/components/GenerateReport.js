@@ -133,7 +133,9 @@ const GenerateReport = () => {
 
     //Warn if difference is more than 30 days    
      
-    const submit = async() => {     
+    const submit = async() => { 
+      setAlert({status:false})  
+      setDownloadStatus(false)  
       
       //Warn if difference is more than 30 days    
       if (differenceInCalendarDays(endDate, startDate) > 31){       
@@ -170,9 +172,7 @@ const GenerateReport = () => {
     }
     //Submit form details all validations have passed
     if (allValidationPass){
-      setDownloadClick(false)
-      setAlert({status:false})
-      setDownloadStatus(false)
+      setDownloadClick(false)            
       setLoadingStatus(true) //begin loading screen here
       submit()      
     }
