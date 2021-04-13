@@ -62,7 +62,7 @@ const getMyResources = async (customerId, subscriptionId) => {
               listOfResources[RGName][RCategory] = new Set()
               listOfResources[RGName][RCategory].add(RName)
             }
-          }else { //RGName not in listOfResources so create and then add the rest
+          }else { //RGName not in listOfResources so create and then add the rest i.e Category and then Name
             listOfResources[RGName] = {}
             listOfResources[RGName][RCategory] = new Set()
             listOfResources[RGName][RCategory].add(RName)
@@ -70,7 +70,7 @@ const getMyResources = async (customerId, subscriptionId) => {
         })
 
         console.log(listOfResources)
-        //return ({data})
+        return (listOfResources)
     }catch (e) { 
         console.error(e)
         if  (e.response){
@@ -78,8 +78,8 @@ const getMyResources = async (customerId, subscriptionId) => {
             if (err_data.code === 3000){
                 error = {description:err_data.description+". Please check the ID"}
             } 
-            console.log("error")   
-            //return ({error})   
+            //console.log("error")   
+            return ({error})   
         }
     }
 }

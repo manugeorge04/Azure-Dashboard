@@ -1,8 +1,12 @@
 import React, {useState} from 'react'
 import {Button, CircularProgress, Grid, makeStyles, TextField} from '@material-ui/core'
 import getMyResources from '../utils/getMyResources';
+import ErrorAlert from '../components/ErrorAlert'
 
-const useStyles = makeStyles((theme) => ({ 
+const useStyles = makeStyles((theme) => ({
+  root1 : {
+    margin: theme.spacing(2),    
+  }, 
   root: {
     margin: theme.spacing(3),    
     flexGrow: 1,
@@ -48,10 +52,18 @@ const MyResources = () => {
     setSubscriptionId(event.target.value.trim())
   }
 
+  const [alert, setAlert] = useState({
+    status: false,
+    message:"",
+    severity:"",
+    title:""
+  })   
+
   const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b$/);
   let allValidationPass = false
 
-  const handleSubmit = () => {     
+  const handleSubmit = () => {    
+    setAlert({status:false}) 
     allValidationPass = true //if this stays true at the end of all the if statements then the PC api will be called    
     
     // check ID inputs  
@@ -66,15 +78,22 @@ const MyResources = () => {
     }else 
       setSubscriptionIdStatus(false)   
 
-    const submit = async() => {       
-      console.log("get resources")
+    const submit = async() => {             
       const response = await getMyResources(customerId,subscriptionId) 
-      //get resources ^
-      setLoadingStatus(false)    
+      if (response.error){
+        setAlert({
+          status:true,
+          message: response.error.description,
+          severity: "error",
+          title:"Error"
+        }) 
+      }   
+      setLoadingStatus(false)   //stop loading screen here     
+       
     }
 
     //Submit form details all validations have passed
-    if (allValidationPass){    
+    if (allValidationPass){          
       setLoadingStatus(true)
       submit()  
       
@@ -83,48 +102,51 @@ const MyResources = () => {
   }
 
   return(
-    <div className={classes.root}>
-      <h1> My Resources </h1>  
+    <div className = {classes.root1}>
+    {alert.status && <ErrorAlert errorMessage={alert.message} title={alert.title} severity={alert.severity} handleClose={setAlert} />} 
+      <div className={classes.root}>
+        <h1> My Resources </h1>  
 
-      <Grid container spacing={3} >
-        <Grid item xs={12} sm={6}>
-          <TextField
-          className={classes.textField}
-          required  
-          error = {customerIdEmpty} 
-          helperText={customerIdEmpty?"Please enter a valid Customer ID":""}     
-          label="Enter Customer ID"           
-          variant="outlined"
-          disabled={loadingStatus}
-          onChange={handleCustomerIdInput}
-          InputProps={{ classes: { root: classes.resize } }}
-          InputLabelProps={{classes: { root: classes.resize } }}
-          />
-        </Grid>        
-        <Grid item xs={12} sm={6}>
-          <TextField
-          className={classes.textField}
-          required        
-          error = {subscriptionIdEmpty}
-          label="Enter Subcription ID" 
-          helperText={subscriptionIdEmpty?"Please enter a valid Subcription ID":""}
-          variant="outlined"
-          disabled={loadingStatus}
-          onChange={handleSubscriptionIdInput}
-          InputProps={{ classes: { root: classes.resize } }}
-          InputLabelProps={{classes: { root: classes.resize } }}
-          />
+        <Grid container spacing={3} >
+          <Grid item xs={12} sm={6}>
+            <TextField
+            className={classes.textField}
+            required  
+            error = {customerIdEmpty} 
+            helperText={customerIdEmpty?"Please enter a valid Customer ID":""}     
+            label="Enter Customer ID"           
+            variant="outlined"
+            disabled={loadingStatus}
+            onChange={handleCustomerIdInput}
+            InputProps={{ classes: { root: classes.resize } }}
+            InputLabelProps={{classes: { root: classes.resize } }}
+            />
+          </Grid>        
+          <Grid item xs={12} sm={6}>
+            <TextField
+            className={classes.textField}
+            required        
+            error = {subscriptionIdEmpty}
+            label="Enter Subcription ID" 
+            helperText={subscriptionIdEmpty?"Please enter a valid Subcription ID":""}
+            variant="outlined"
+            disabled={loadingStatus}
+            onChange={handleSubscriptionIdInput}
+            InputProps={{ classes: { root: classes.resize } }}
+            InputLabelProps={{classes: { root: classes.resize } }}
+            />
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
-      onClick={handleSubmit}     
-      >
-        Submit
-      </Button>  
+        <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
+        onClick={handleSubmit}     
+        >
+          Submit
+        </Button>  
 
-      {loadingStatus && <CircularProgress className = "circularProgress" />}
+        {loadingStatus && <CircularProgress className = "circularProgress" />}
 
+      </div>
     </div>
   )
 }
