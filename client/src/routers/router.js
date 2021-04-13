@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import AppBarHeader from '../components/AppBarHeader'
 import GenerateReport from '../components/GenerateReport';
-import MyResources from '../components/MyResoruces';
+import MyResources from '../components/MyResources';
 
 const AppRouter = () => (
     <BrowserRouter>
