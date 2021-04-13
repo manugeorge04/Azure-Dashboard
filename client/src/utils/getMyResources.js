@@ -69,7 +69,6 @@ const getMyResources = async (customerId, subscriptionId) => {
           }          
         })
 
-        console.log(listOfResources)
         return (listOfResources)
     }catch (e) { 
         console.error(e)

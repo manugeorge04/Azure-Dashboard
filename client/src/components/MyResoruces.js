@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import {Button, CircularProgress, Grid, makeStyles, TextField} from '@material-ui/core'
 import getMyResources from '../utils/getMyResources';
 import ErrorAlert from '../components/ErrorAlert'
+import ResourcesList from '../components/ResourcesList'
+import getCompanyName from '../utils/getCompanyName'
 
 const useStyles = makeStyles((theme) => ({
   root1 : {
@@ -39,6 +41,14 @@ const MyResources = () => {
 
   const [loadingStatus, setLoadingStatus] = useState(false)
 
+  const [listOfResources, setlistOfResources] = useState(undefined)  // uncomment this before commit
+
+  //testing object
+  // const [listOfResources, setlistOfResources] = useState(
+  //   {"zach23mar19":{"Storage":["zach23mar19diag466","zach23mar19diag"],"Virtual Network":["zgm-ip"],"Automation":["AutoStartStopZGM"]},"cloud-shell-storage-centralindia":{"Storage":["csgcaae85d33118x47cbx9a7"]},"digitaldesk-rg":{"Virtual Network":["digitaldesk-ip"],"Storage":["digitaldesk_OsDisk_1_6bc1f431f9744cb0bd6e05493d271e56"]},"asr-myvm-rg":{"Bandwidth":["ryac6basrmyvmvasrcache"],"Storage":["ryac6basrmyvmvasrcache"],"Azure Site Recovery":["asr-myvm-vault"],"Automation":["asr-myvm--2rq-asr-automationaccount"]},"ZACH23MAR19":{"Bandwidth":["zgm"],"Storage":["linuxvm_DataDisk_0","zgm_OsDisk_1_b2c3784853534037a0e911e0364716f8","linuxvm_OsDisk_1_9c882dc2b1fb4d1a96942d07c5b65139"],"Virtual Machines":["zgm"]},"ZACH23MAR19-ASR":{"Storage":["zgm_OsDisk_1_b2c3784853534037a0e911e0364716f8-ASRReplica"]},"LINUXFLASK":{"Storage":["linuxflaskvm_OsDisk_1_143046fc9f0c4a50919a75a8673388b9"],"Bandwidth":["linuxflaskvm"],"Virtual Machines":["linuxflaskvm"]},"azconsreport":{"Storage":["azconsreportstrg"]},"defaultresourcegroup-cin":{"Log Analytics":["defaultworkspace-caae85d3-3118-47cb-9a70-31154f2d8687-cin"]}}
+  // )
+
+
   const [customerIdEmpty, setCustomerIdStatus] = useState(false)
   const [subscriptionIdEmpty, setSubscriptionIdStatus] = useState(false)
 
@@ -59,8 +69,10 @@ const MyResources = () => {
     title:""
   })   
 
+  const [companyName, setCompanyName] = useState("") //change to empty before commiting
+
   const patt = new RegExp(/\b[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-\b[0-9a-fA-F]{12}\b$/);
-  let allValidationPass = false
+  let allValidationPass = false  
 
   const handleSubmit = () => {    
     setAlert({status:false}) 
@@ -87,9 +99,10 @@ const MyResources = () => {
           severity: "error",
           title:"Error"
         }) 
-      }   
-      setLoadingStatus(false)   //stop loading screen here     
-       
+      }         
+      setCompanyName(await getCompanyName(customerId))      
+      setlistOfResources(response) 
+      setLoadingStatus(false)   //stop loading screen here         
     }
 
     //Submit form details all validations have passed
@@ -97,8 +110,7 @@ const MyResources = () => {
       setLoadingStatus(true)
       submit()  
       
-    }
-    
+    }    
   }
 
   return(
@@ -137,7 +149,10 @@ const MyResources = () => {
             />
           </Grid>
         </Grid>
-
+        {listOfResources && <ResourcesList listOfResources={listOfResources} companyName={companyName}/>
+        }
+        {//<ResourcesList listOfResources={listOfResources} companyName={companyName}/>
+        }
         <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
         onClick={handleSubmit}     
         >
