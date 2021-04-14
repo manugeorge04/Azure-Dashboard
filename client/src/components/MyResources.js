@@ -43,12 +43,6 @@ const MyResources = () => {
 
   const [listOfResources, setlistOfResources] = useState(undefined)  // uncomment this before commit
 
-  //testing object
-  // const [listOfResources, setlistOfResources] = useState(
-  //   {"zach23mar19":{"Storage":["zach23mar19diag466","zach23mar19diag"],"Virtual Network":["zgm-ip"],"Automation":["AutoStartStopZGM"]},"cloud-shell-storage-centralindia":{"Storage":["csgcaae85d33118x47cbx9a7"]},"digitaldesk-rg":{"Virtual Network":["digitaldesk-ip"],"Storage":["digitaldesk_OsDisk_1_6bc1f431f9744cb0bd6e05493d271e56"]},"asr-myvm-rg":{"Bandwidth":["ryac6basrmyvmvasrcache"],"Storage":["ryac6basrmyvmvasrcache"],"Azure Site Recovery":["asr-myvm-vault"],"Automation":["asr-myvm--2rq-asr-automationaccount"]},"ZACH23MAR19":{"Bandwidth":["zgm"],"Storage":["linuxvm_DataDisk_0","zgm_OsDisk_1_b2c3784853534037a0e911e0364716f8","linuxvm_OsDisk_1_9c882dc2b1fb4d1a96942d07c5b65139"],"Virtual Machines":["zgm"]},"ZACH23MAR19-ASR":{"Storage":["zgm_OsDisk_1_b2c3784853534037a0e911e0364716f8-ASRReplica"]},"LINUXFLASK":{"Storage":["linuxflaskvm_OsDisk_1_143046fc9f0c4a50919a75a8673388b9"],"Bandwidth":["linuxflaskvm"],"Virtual Machines":["linuxflaskvm"]},"azconsreport":{"Storage":["azconsreportstrg"]},"defaultresourcegroup-cin":{"Log Analytics":["defaultworkspace-caae85d3-3118-47cb-9a70-31154f2d8687-cin"]}}
-  // )
-
-
   const [customerIdEmpty, setCustomerIdStatus] = useState(false)
   const [subscriptionIdEmpty, setSubscriptionIdStatus] = useState(false)
 
@@ -108,8 +102,7 @@ const MyResources = () => {
     //Submit form details all validations have passed
     if (allValidationPass){          
       setLoadingStatus(true)
-      submit()  
-      
+      submit()        
     }    
   }
 
@@ -150,9 +143,7 @@ const MyResources = () => {
           </Grid>
         </Grid>
         {listOfResources && <ResourcesList listOfResources={listOfResources} companyName={companyName}/>
-        }
-        {//<ResourcesList listOfResources={listOfResources} companyName={companyName}/>
-        }
+        }       
         <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
         onClick={handleSubmit}     
         >

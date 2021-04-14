@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {List, ListItem, ListItemText, Collapse, ListSubheader, makeStyles, StylesProvider } from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 
-
 const useStyles = makeStyles((theme) => ({
     list: {
       width: '70%',    
@@ -30,14 +29,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-
-
 const ResourcesList = (props) => {  
  
   const classes = useStyles()
 
   const listOfResources = props.listOfResources 
+  console.log(listOfResources)  
 
   const [open, setOpen] = useState({});
 
@@ -70,26 +67,31 @@ const ResourcesList = (props) => {
       classes={{root:classes.list}}
     >
       {
-        Object.keys(listOfResources).map((RGName,RGN_index) => 
-          (    
-            <React.Fragment key={RGN_index}>
+        Object.keys(listOfResources).map((RGName,RGN_index) =>           (    
+            <React.Fragment key={RGN_index}> 
+            {console.log("Name is ",RGName)}
               <ListItem button onClick={handleClick} id={RGN_index}>        
-                <ListItemText primary={RGName} primaryTypographyProps={{ classes:{ root: classes.resizeFont }}} />
+                <ListItemText 
+                  primary={RGName || "ResourceGroup Name N/A"} 
+                  primaryTypographyProps={{ classes:{ root: classes.resizeFont }}}
+                />
                 {open[RGN_index] ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={open[RGN_index]} timeout="auto" unmountOnExit>
               {
                 Object.keys(listOfResources[RGName]).map((RCategory,RC_index) =>(           
-                  <React.Fragment key={RGN_index+"_"+RC_index}>                  
+                  <React.Fragment key={RGN_index+"_"+RC_index}>       
+                  {console.log("Category is ",RCategory)}           
                     <ListItem button onClick={handleClick} id={RGN_index+"_"+RC_index} className={classes.nested1} >            
-                      <ListItemText primary={RCategory} primaryTypographyProps={{ classes:{ root: classes.resizeFont1 }}}/>
+                      <ListItemText primary={RCategory || "Category N/A"} primaryTypographyProps={{ classes:{ root: classes.resizeFont1 }}}/>
                       {open[RGN_index+"_"+RC_index] ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>                  
                   <Collapse in={open[RGN_index+"_"+RC_index]} timeout="auto" unmountOnExit>  
                   {
                     new Array(listOfResources[RGName][RCategory]).map((RName,RN_index) =>(  //This is a Set; so convert to array before performing map                         
                         <ListItem component="div" id={RGN_index+"_"+RC_index+"_"+RN_index} key={RGN_index+"_"+RC_index+"_"+RN_index} className={classes.nested2} >
-                          <ListItemText primary={RName} primaryTypographyProps={{ classes:{ root: classes.resizeFont2 }}}/>                          
+                          <ListItemText primary={RName || "Resource Name N/A"} primaryTypographyProps={{ classes:{ root: classes.resizeFont2 }}}/>                          
+                          {console.log("RName is ",RName)}
                         </ListItem>                      
                     ))
                   }  
@@ -104,10 +106,6 @@ const ResourcesList = (props) => {
       }           
     </List>
   );
-
-
-
-  
 }
 
 export default ResourcesList
