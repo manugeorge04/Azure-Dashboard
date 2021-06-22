@@ -1009,6 +1009,11 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
+"@microsoft/teams-js@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/teams-js/-/teams-js-1.10.0.tgz#ab171a47d4907a1b74c39999eb80c0b80ed71a9f"
+  integrity sha512-g8+ox5nWe9IjDFRHnCXk7mkQRGjHFcAMSn7JpUtJfuWu2tDUmXAp/4LUSgewvBbbmy68YtS+KTFPHRyUoTzk6w==
+
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents":
   version "2.1.8-no-fsevents"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.tgz#da7c3996b8e6e19ebd14d82eaced2313e7769f9b"
@@ -1910,9 +1915,9 @@ camelcase@^5.0.0, camelcase@^5.3.1:
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
 caniuse-lite@^1.0.30001173:
-  version "1.0.30001177"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001177.tgz#2c3b384933aafda03e29ccca7bb3d8c3389e1ece"
-  integrity sha512-6Ld7t3ifCL02jTj3MxPMM5wAYjbo4h/TAQGFTgv1inihP1tWnWp8mxxT4ut4JBEHLbpFXEXJJQ119JCJTBkYDw==
+  version "1.0.30001239"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001239.tgz"
+  integrity sha512-cyBkXJDMeI4wthy8xJ2FvDU6+0dtcZSJW3voUF8+e9f1bBeuvyZfc3PNbkOETyhbR+dGCPzn9E7MA3iwzusOhQ==
 
 caseless@~0.12.0:
   version "0.12.0"

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {List, ListItem, ListItemText, Collapse, ListSubheader, makeStyles, StylesProvider } from '@material-ui/core';
+import {List, ListItem, ListItemText, Collapse, ListSubheader, makeStyles } from '@material-ui/core';
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
+
 
 const useStyles = makeStyles((theme) => ({
     list: {
-      width: '70%',    
+      width: '90%',    
       backgroundColor: '#F8F8FF',
       margin: theme.spacing(2), 
       borderRadius: "10px",         
@@ -30,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ResourcesList = (props) => {  
- 
+  
   const classes = useStyles()
 
   const listOfResources = props.listOfResources 
-  console.log(listOfResources)  
-
+  const setSummary = props.setSummary
+  
   const [open, setOpen] = useState({});
 
   const handleClick = (e) => {    
@@ -45,15 +46,28 @@ const ResourcesList = (props) => {
     }));
   };
 
+  let setOfRCategories = new Set()
+  let countOfResources = 0 
+
   useEffect(() => { //set all the states after Mounting
     const state = {}
     Object.keys(listOfResources).map((RGName,RGN_index) => {
       state[RGN_index] = false      
       Object.keys(listOfResources[RGName]).map((RCategory,RC_index) =>{
-        state[RGN_index+"_"+RC_index] = false          
+        state[RGN_index+"_"+RC_index] = false        
+        setOfRCategories.add(RCategory)  
+        countOfResources += listOfResources[RGName][RCategory].size
+        console.log(`${RCategory} has ${listOfResources[RGName][RCategory].size} Resources`)
       })
     })
-    setOpen(state)        
+    setOpen(state) 
+    console.log(setOfRCategories) 
+    setSummary({
+      CompanyName: props.companyName,
+      R_Count : Object.keys(listOfResources).length,
+      RC_Count : setOfRCategories.size,
+      RN_Count : countOfResources 
+    })      
   }, [listOfResources]); //reset states on new submit
 
   return (  
@@ -61,15 +75,16 @@ const ResourcesList = (props) => {
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader classes={{root:classes.listSubHeaderResize}} component="div" id="nested-list-subheader">
-          {`${props.companyName}: List of Resources`}
+          {props.companyName}
+          <br></br>
+          {"List of Resources"}
         </ListSubheader>
       }
       classes={{root:classes.list}}
     >
       {
         Object.keys(listOfResources).map((RGName,RGN_index) =>           (    
-            <React.Fragment key={RGN_index}> 
-            {console.log("Name is ",RGName)}
+            <React.Fragment key={RGN_index}>             
               <ListItem button onClick={handleClick} id={RGN_index}>        
                 <ListItemText 
                   primary={RGName || "ResourceGroup Name N/A"} 
@@ -80,18 +95,16 @@ const ResourcesList = (props) => {
               <Collapse in={open[RGN_index]} timeout="auto" unmountOnExit>
               {
                 Object.keys(listOfResources[RGName]).map((RCategory,RC_index) =>(           
-                  <React.Fragment key={RGN_index+"_"+RC_index}>       
-                  {console.log("Category is ",RCategory)}           
+                  <React.Fragment key={RGN_index+"_"+RC_index}> 
                     <ListItem button onClick={handleClick} id={RGN_index+"_"+RC_index} className={classes.nested1} >            
                       <ListItemText primary={RCategory || "Category N/A"} primaryTypographyProps={{ classes:{ root: classes.resizeFont1 }}}/>
                       {open[RGN_index+"_"+RC_index] ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>                  
                   <Collapse in={open[RGN_index+"_"+RC_index]} timeout="auto" unmountOnExit>  
                   {
-                    new Array(listOfResources[RGName][RCategory]).map((RName,RN_index) =>(  //This is a Set; so convert to array before performing map                         
+                    [ ...listOfResources[RGName][RCategory]].map((RName,RN_index) =>(  //This is a Set; so convert to array before performing map                         
                         <ListItem component="div" id={RGN_index+"_"+RC_index+"_"+RN_index} key={RGN_index+"_"+RC_index+"_"+RN_index} className={classes.nested2} >
-                          <ListItemText primary={RName || "Resource Name N/A"} primaryTypographyProps={{ classes:{ root: classes.resizeFont2 }}}/>                          
-                          {console.log("RName is ",RName)}
+                          <ListItemText primary={RName || "Resource Name N/A"} primaryTypographyProps={{ classes:{ root: classes.resizeFont2 }}}/>                                                   
                         </ListItem>                      
                     ))
                   }  

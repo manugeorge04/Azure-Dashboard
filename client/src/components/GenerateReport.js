@@ -180,8 +180,7 @@ const GenerateReport = () => {
 
 
   return(  
-    <div className = {classes.root1}>
-    {alert.status && <ErrorAlert errorMessage={alert.message} title={alert.title} severity={alert.severity} handleClose={setAlert} />} 
+    <div className = {classes.root1}>    
     <div className={classes.root}>        
       <h1> Generate Customer Utilization Report</h1>    
       <Grid container spacing={3} >
@@ -311,6 +310,7 @@ const GenerateReport = () => {
       }
       
     </div>
+    {alert.status && <ErrorAlert errorMessage={alert.message} title={alert.title} severity={alert.severity} handleClose={setAlert} />} 
     </div>        
   )
 }

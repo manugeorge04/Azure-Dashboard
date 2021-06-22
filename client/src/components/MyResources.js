@@ -4,6 +4,7 @@ import getMyResources from '../utils/getMyResources';
 import ErrorAlert from '../components/ErrorAlert'
 import ResourcesList from '../components/ResourcesList'
 import getCompanyName from '../utils/getCompanyName'
+import * as microsoftTeams from "@microsoft/teams-js";
 
 const useStyles = makeStyles((theme) => ({
   root1 : {
@@ -37,9 +38,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MyResources = () => {
+  microsoftTeams.initialize()
   const classes = useStyles();
 
   const [loadingStatus, setLoadingStatus] = useState(false)
+  const [postStatus, setPostStatus] = useState(false)
 
   const [listOfResources, setlistOfResources] = useState(undefined)  // uncomment this before commit
 
@@ -48,6 +51,8 @@ const MyResources = () => {
 
   const [customerId, setCustomerId] = useState("")
   const [subscriptionId, setSubscriptionId] = useState("")
+
+  const [summary, setSummary] = useState("")
 
   const handleCustomerIdInput = (event) => {
     setCustomerId(event.target.value.trim())
@@ -96,14 +101,23 @@ const MyResources = () => {
       }         
       setCompanyName(await getCompanyName(customerId))      
       setlistOfResources(response) 
+      setPostStatus(true) //Show the Post Button
       setLoadingStatus(false)   //stop loading screen here         
     }
 
     //Submit form details all validations have passed
     if (allValidationPass){          
       setLoadingStatus(true)
+      setPostStatus(false)
       submit()        
     }    
+  }
+
+  const handlePostButton = () => {
+    microsoftTeams.tasks.submitTask({   //returning an object
+      summary
+    });
+    console.log(summary)
   }
 
   return(
@@ -142,13 +156,26 @@ const MyResources = () => {
             />
           </Grid>
         </Grid>
-        {listOfResources && <ResourcesList listOfResources={listOfResources} companyName={companyName}/>
-        }       
+
         <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
         onClick={handleSubmit}     
         >
           Submit
-        </Button>  
+        </Button>
+
+
+        {listOfResources && <ResourcesList listOfResources={listOfResources} companyName={companyName} setSummary={setSummary}/>
+        }       
+           
+        
+        { (postStatus) &&
+          <Button variant="contained" color="primary" className={classes.submitButton} disabled={loadingStatus}
+            onClick={handlePostButton}     
+          >
+            Post Summary
+          </Button>         
+
+        }
 
         {loadingStatus && <CircularProgress className = "circularProgress" />}
 
