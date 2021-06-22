@@ -88,7 +88,7 @@ const ResourcesList = (props) => {
                     </ListItem>                  
                   <Collapse in={open[RGN_index+"_"+RC_index]} timeout="auto" unmountOnExit>  
                   {
-                    new Array(listOfResources[RGName][RCategory]).map((RName,RN_index) =>(  //This is a Set; so convert to array before performing map                         
+                    [ ...listOfResources[RGName][RCategory]].map((RName,RN_index) =>(  //This is a Set; so convert to array before performing map                         
                         <ListItem component="div" id={RGN_index+"_"+RC_index+"_"+RN_index} key={RGN_index+"_"+RC_index+"_"+RN_index} className={classes.nested2} >
                           <ListItemText primary={RName || "Resource Name N/A"} primaryTypographyProps={{ classes:{ root: classes.resizeFont2 }}}/>                          
                           {console.log("RName is ",RName)}
